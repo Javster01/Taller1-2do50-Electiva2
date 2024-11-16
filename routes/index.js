@@ -324,7 +324,7 @@ const express = require('express');
 const router = express.Router();
 
 // Importar los controladores de autenticación
-const { createUsuario, login } = require('../controllers/controll-Auth');
+const { createUsuario, login } = require('../controllers/controll-auth');
 
 // Rutas públicas para autenticación
 router.post('/users', createUsuario); // Registro de usuarios
