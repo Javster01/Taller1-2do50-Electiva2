@@ -322,48 +322,12 @@
 
 const express = require('express');
 const router = express.Router();
-const { verificar } = require('../Middleware/Auth');
 
-const { 
-  getProducts, 
-  createProduct, 
-  getProductById,
-  updateProduct, 
-  deleteProduct,
-} = require('../controllers/controll-products');
+// Importar los controladores de autenticación
+const { createUsuario, login } = require('../controllers/controll-Auth');
 
-const { 
-  getCategories, 
-  createCategory, 
-  addProductToCategory,
-  updateCategory, 
-  deleteCategory,
-} = require('../controllers/controll-categories');
-
-const { 
-  createUsuario,
-  login 
-} = require('../controllers/controll-Auth');
-
-// Rutas públicas
-router.post('/users', createUsuario);
-router.post('/login', login);
-
-// Rutas protegidas
-router.use(verificar); // Aplica el middleware de autenticación a todas las rutas siguientes
-
-// Rutas para productos
-router.get('/products', getProducts);
-router.get('/products/:id', getProductById);
-router.post('/products', createProduct);
-router.put('/products/:id', updateProduct);
-router.delete('/products/:id', deleteProduct);
-
-// Rutas para categorías
-router.get('/categories', getCategories);
-router.post('/categories', createCategory);
-router.put('/categories/:id', updateCategory); 
-router.delete('/categories/:id', deleteCategory);
-router.post('/categories/:categoryId/product/:productId', addProductToCategory);
+// Rutas públicas para autenticación
+router.post('/users', createUsuario); // Registro de usuarios
+router.post('/login', login); // Inicio de sesión
 
 module.exports = router;
