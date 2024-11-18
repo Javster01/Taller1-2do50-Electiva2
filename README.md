@@ -203,10 +203,3 @@ La documentación de los esquemas y resoluciones de GraphQL está disponible a t
 3. **Problemas de conexión con MongoDB**:
    - Verifica que tu base de datos esté corriendo y que `MONGO_URI` esté configurado correctamente.
 
-
-## **Licencia**
-Este proyecto está bajo la Licencia MIT.
-
----
-
-Con este **README**, tu proyecto está bien documentado y será fácil de entender y usar por cualquier colaborador o evaluador. 🚀
