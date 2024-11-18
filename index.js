@@ -67,9 +67,15 @@ async function startServer() {
         const user = authenticateToken(authHeader); // Valida el token y obtiene el usuario
         return { user }; // Agrega el usuario al contexto
       },
+      introspection: true, // Habilita introspección para GraphQL Playground
+      playground: true,    // Habilita GraphQL Playground
       formatError: (err) => {
         console.error('❌ Error en GraphQL:', err.message);
-        return err;
+        return {
+          message: err.message,
+          locations: err.locations,
+          path: err.path,
+        };
       },
     });
 
@@ -81,7 +87,7 @@ async function startServer() {
     app.listen(app.get('PORT'), () => {
       console.log(`🚀 Server is running!`);
       console.log(`🔗 REST API: http://localhost:${app.get('PORT')}/api`);
-      console.log(`🔗 GraphQL: http://localhost:${app.get('PORT')}${apolloServer.graphqlPath}`);
+      console.log(`🔗 GraphQL Playground: http://localhost:${app.get('PORT')}${apolloServer.graphqlPath}`);
     });
   } catch (err) {
     console.error('❌ Error al iniciar el servidor:', err.stack || err.message);
