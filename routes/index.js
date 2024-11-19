@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Importar los controladores de autenticación
-const { createUsuario, login } = require('../controllers/controll-auth');
+const { createUsuario, login } = require('../controllers/controll-Auth');
 
 /**
  * @swagger
