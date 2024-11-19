@@ -15,10 +15,18 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
+const corsOptions = {
+  origin: 'https://frontgraphql.onrender.com', // URL de tu frontend
+  methods: 'GET, POST',
+  allowedHeaders: 'Content-Type, Authorization',
+};
+
+app.use(cors(corsOptions));
+
 // Inicializar Express
 const app = express();
 app.set('PORT', process.env.PORT || 4000);
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
