@@ -15,18 +15,29 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
-const corsOptions = {
-  origin: 'https://frontgraphql.onrender.com', // URL de tu frontend
-  methods: 'GET, POST',
-  allowedHeaders: 'Content-Type, Authorization',
-};
-
-app.use(cors(corsOptions));
-
 // Inicializar Express
 const app = express();
-app.set('PORT', process.env.PORT || 4000);
-app.use(cors(corsOptions));
+const PORT = process.env.PORT || 4000;
+
+app.set('PORT', PORT);
+
+// Configuración de CORS
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['*'];
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Permitir cualquier origen en desarrollo
+      if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS bloqueado para el origen: ${origin}`));
+      }
+    },
+    credentials: true, // Permitir cookies y encabezados de autenticación
+  })
+);
+
+// Configuración de middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -76,7 +87,6 @@ async function startServer() {
         return { user }; // Agrega el usuario al contexto
       },
       introspection: true, // Habilita introspección para GraphQL Playground
-      playground: true,    // Habilita GraphQL Playground
       formatError: (err) => {
         console.error('❌ Error en GraphQL:', err.message);
         return {
@@ -89,13 +99,13 @@ async function startServer() {
 
     // Inicializar Apollo Server
     await apolloServer.start();
-    apolloServer.applyMiddleware({ app });
+    apolloServer.applyMiddleware({ app, path: '/graphql' });
 
     // Iniciar el servidor
-    app.listen(app.get('PORT'), () => {
-      console.log(`🚀 Server is running!`);
-      console.log(`🔗 REST API: http://localhost:${app.get('PORT')}/api`);
-      console.log(`🔗 GraphQL Playground: http://localhost:${app.get('PORT')}${apolloServer.graphqlPath}`);
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on port ${PORT}`);
+      console.log(`🔗 REST API: http://localhost:${PORT}/api`);
+      console.log(`🔗 GraphQL Playground: http://localhost:${PORT}/graphql`);
     });
   } catch (err) {
     console.error('❌ Error al iniciar el servidor:', err.stack || err.message);
